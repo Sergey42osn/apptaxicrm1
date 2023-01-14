@@ -24,11 +24,22 @@ class LoginController extends Controller
 
         //dd($driver);
 
+        if(!$driver){
+
+            return response()->json([
+                'result'    => false,
+                'msg' => 'Данные не верны!',
+                'errors' => 'Unauthorised'
+            ], 200);
+
+        }
+
         if(!$driver->attempt($cred)){
             return response()->json([
-                'message' => 'Данные не верны!',
+                'result'    => false,
+                'msg' => 'Данные не верны!',
                 'errors' => 'Unauthorised'
-            ], 401);
+            ], 200);
         }
 
         $user = User::find($driver->id_user);

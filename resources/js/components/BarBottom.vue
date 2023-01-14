@@ -62,7 +62,7 @@
         mounted() {
             console.log('Component mounted.');
 
-            console.log(this.barbottmmenu)
+           // console.log(this.barbottmmenu)
         },
         created(){
 
@@ -81,7 +81,7 @@
         },
          computed:{
             authState(){
-             // console.log(this.$store.getters.authState.state);
+             //console.log(this.$store.getters.authState);
              return this.$store.getters.authState.state;
           },          
         }

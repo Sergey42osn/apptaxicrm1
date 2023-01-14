@@ -22,6 +22,7 @@ class LoginController extends Controller
 
         if (!Auth::attempt($credentials)) {
             return response()->json([
+                'result'    => false,
                 'message' => 'You cannot sign with those credentials',
                 'errors' => 'Unauthorised'
             ], 401);
@@ -66,7 +67,7 @@ class LoginController extends Controller
 
 	public function logout()
 	{
-        //dd('logout');
+       // dd('logout');
 
 	    $accessToken = auth()->user()->token();
 
@@ -85,7 +86,7 @@ class LoginController extends Controller
 
 	public function user(Request $request)
     {
-    	//dd($request);
+    	//dd($request->user());
 
         return response()->json([
                    // $request->user(),

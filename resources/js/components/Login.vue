@@ -4,7 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <div v-if="register" class="wrapper_info success"><p>{{ messageInfo }}</p></div>
+                    <div v-if="register" class="wrapper_info success"><p>{{ messageInfo }} {{ auth }}</p></div>
                     <div class="box_flex flex_column wrapper_content">
                         <div class="panel-heading">Авторизация</div>
                     
@@ -120,6 +120,7 @@ import axios from 'axios';
                 },
                 loggedIn:false,
                  headers: false,
+                 //auth:false,
             }
         },
         methods:{
@@ -196,20 +197,22 @@ import axios from 'axios';
                             if (response.data.token) {
 
                                 this.verifyemail.state = true;
-                            this.verifyemail.error = false;
+                                this.verifyemail.error = false;
 
-                            this.updateVerifyEmailState(this.verifyemail);
+                                //this.updateVerifyEmailState(this.verifyemail);
 
-                            window.localStorage.setItem('token',response.data.token);
+                                this.$store.dispatch('UPDATE_ACCESS_TOKEN',response.data.token);
 
-                            //this.message = response.data.message;
-                           // this.success.info = true;
+                               // window.localStorage.setItem('token',response.data.token);
 
-                           // this.loggedIn = true;
+                                //this.message = response.data.message;
+                                // this.success.info = true;
 
-                           this.$emit('loggedIn',true);
+                                // this.loggedIn = true;
 
-                            this.$router.push('/');
+                               // this.$emit('loggedIn',true);
+
+                                this.$router.push('/');
                             }
 
                         }
@@ -274,15 +277,38 @@ import axios from 'axios';
             },
             closeMenuLogin(){
                 this.$router.push('/');
+            },
+            getAuth(){
+               
+             console.log(this.auth);
             }
         },
         computed:{
-          
+            getUserAuth(){
+
+                return this.$store.getters.getUserAuth;
+            },
+            auth(){
+
+               // console.log(this.getUserAuth);
+
+                if(this.getUserAuth.name){
+                    this.$router.push('/');
+                }
+
+                return this.getUserAuth.name;
+            }
+        },
+        created(){
+           //this.getAuth();
+           this.$store.dispatch('USER_AUTH');
         },
         mounted() {
             console.log('Login mounted.');
            //this.Hide();
-           this.loggedin();
+           //this.loggedin();
+            this.getAuth();
+            //console.log(this.auth)
         }
     }
 </script>

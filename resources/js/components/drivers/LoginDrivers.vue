@@ -4,7 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <div v-if="register" class="wrapper_info success"><p>{{ messageInfo }}</p></div>
+                    <div v-if="register" class="wrapper_info success"><p>{{ messageInfo }} {{ driver }}</p></div>
                     <div class="box_flex flex_column wrapper_content">
                         <div class="panel-heading">Авторизация</div>
                     
@@ -149,7 +149,7 @@ import axios from 'axios';
             },
              saveForm: function(event){
                 // event.preventDefault(e);
-                console.log(event);
+                //console.log(event);
 
                 this.info = false;
                 this.errors.info = false;
@@ -182,44 +182,59 @@ import axios from 'axios';
                         password: this.password
                     })
                     .then(response => {
-                      console.log(response.data);
+                      //console.log(response.data);
                         //localStorage.setItem('user',JSON.stringify(response.data.user))
                         //localStorage.setItem('jwt',response.data.token)
 
-                        if (response.data.error) {
+                        if (response.data.result == false) {
 
                             if (response.data.error == 'verifyemail') {
 
                                 console.log(response.data.error);
 
-                                this.verifyemail.message = response.data.message;
+                                //this.verifyemail.message = response.data.message;
 
-                                this.verifyemail.href = response.data.href;
+                                //this.verifyemail.href = response.data.href;
 
-                                this.updateVerifyEmailState(this.verifyemail);
+                                //this.updateVerifyEmailState(this.verifyemail);
 
+                            }else if(response.data.msg){
+                                this.errors.info = true;
+                                this.errors.msg = response.data.msg;
                             }
 
                         }else if (response.data.result == true) {
 
-                            if (response.data.token) {
+                            console.log(response.data);
+
+                           /* if (response.data.token) {
 
                                 this.verifyemail.state = true;
-                            this.verifyemail.error = false;
+                                this.verifyemail.error = false;
 
-                            this.updateVerifyEmailState(this.verifyemail);
+                                this.updateVerifyEmailState(this.verifyemail);
 
-                            window.localStorage.setItem('token',response.data.token);
+                                if(response.data.token){
 
-                            //this.message = response.data.message;
-                           // this.success.info = true;
+                                    this.$store.dispatch('UPDATE_ACCESS_TOKEN', response.data.token);
+                                    //this.$store.commit('ACCESS_TOKEN',);
+                                }
 
-                           // this.loggedIn = true;
+                               // window.localStorage.setItem('token',response.data.token);
 
-                           this.$emit('loggedIn',true);
+                                //this.message = response.data.message;
+                                // this.success.info = true;
 
-                            this.$router.push('/');
-                            }
+                                // this.loggedIn = true;
+
+                                //this.$emit('loggedIn',true);
+
+                                //this.$router.push('/');
+                            }*/
+
+                            this.$store.dispatch('UPDATE_ACCESS_TOKEN',response.data.token);
+
+                            this.$router.push('/drivers');
 
                         }
 
@@ -269,7 +284,7 @@ import axios from 'axios';
                     }
 
                     axios.get('/api/v1/auth',{
-                         method: 'POST',
+                        method: 'POST',
                         headers:this.headers
                         })
                        .then(response => {
@@ -295,8 +310,6 @@ import axios from 'axios';
                 }
             },
             resetPwd(e){
-                console.log(e);
-
                 this.success.info = false;
 
                 this.success.msg = false;
@@ -325,7 +338,6 @@ import axios from 'axios';
                         login: this.login
                     })
                     .then(response => {
-                        console.log(response);
 
                         if (response.data.result == true) {
 
@@ -370,21 +382,31 @@ import axios from 'axios';
                
             },
             updateVerifyEmailState(data,colback){
-                this.$store.commit('UPDATE_VERIFYEMAIL_STATE',data);
+                //this.$store.commit('UPDATE_VERIFYEMAIL_STATE',data);
 
-                 this.$router.push('/email/verify/notic/');
+                //this.$router.push('/email/verify/notic/');
             },
             closeMenuLogin(){
                 this.$router.push('/');
-            }
+            },
         },
         computed:{
-          
+            driver(){
+                console.log(this.getDriverProfilec)
+            },
+            getDriverProfile(){
+                console.log(this.$store.getters.getDriverProfile);
+                return this.$store.getters.getDriverProfile;
+            },
+        },
+        created(){
+            this.$store.dispatch('GET_USER_PROFILE');
+            //this.getAuth();
         },
         mounted() {
             console.log('Login mounted.');
            //this.Hide();
-           this.loggedin();
+           //this.loggedin();
         }
     }
 </script>

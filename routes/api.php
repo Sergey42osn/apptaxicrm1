@@ -40,9 +40,7 @@ Route::group(['prefix' => '/v1','namespace' => 'Api','middleware' => ['api'], 'a
 
 	Route::post('/email/resend','VerificationController@resend');   
 
-	Route::post('/logout', 'LoginController@logout')->middleware('auth:api');
-
-	Route::post('/logout', 'Drivers\LoginController@logout')->middleware('auth:api-drivers');
+	//Route::post('/logout', 'Drivers\LoginController@logout')->middleware('auth:api-drivers');
 
 	Route::post('/cors/login', 'CorsController@cors');
 
@@ -74,6 +72,10 @@ Route::group(['prefix' => '/v1','namespace' => 'Api','middleware' => ['api'], 'a
 		});
 
 	    Route::get('user', 'LoginController@user');
+
+		 Route::post('/logout', 'LoginController@logout');
+
+		 Route::get('getdriver', 'Drivers\DriversController@getdriver');
 
 	    Route::group(['prefix' => '/admin','namespace' => 'Admin','middleware' => ['admin']], function () {
 

@@ -7,8 +7,32 @@
                 </div>
                 <div class="menu_profil_button">
                     <div class="menu_profil_button_text">
-                        <p>Логин</p>
-                        <p>000001</p>
+                        <span>Логин</span>
+                        <span>{{ login }}</span>
+                    </div>
+                    <div class="menu_profil_button_icon"></div>
+                </div>
+            </div>
+            <div class="wrapper_menu_profil p10 mb10">
+                <div class="menu_profil_img">
+                    <img src="" alt="">
+                </div>
+                <div class="menu_profil_button">
+                    <div class="menu_profil_button_text">
+                        <span>Номер телефона</span>
+                        <span>{{ phone }}</span>
+                    </div>
+                    <div class="menu_profil_button_icon"></div>
+                </div>
+            </div>
+            <div class="wrapper_menu_profil p10 mb10">
+                <div class="menu_profil_img">
+                    <img src="" alt="">
+                </div>
+                <div class="menu_profil_button">
+                    <div class="menu_profil_button_text">
+                        <span>Автомобиль</span>
+                        <span>{{ car_name }} {{ car_color }} {{ car_namber }}</span>
                     </div>
                     <div class="menu_profil_button_icon"></div>
                 </div>
@@ -30,7 +54,8 @@
                 barbottmmenu:{
                     menu:true,
                     map:false,
-                    active:'menu'
+                    active:'menu',
+                    user:false,
                 }
             }
         },
@@ -38,13 +63,21 @@
             console.log('Component mounted.')
         },
         created(){
-
+            this.$store.dispatch('GET_USER_PROFILE');
         },
         methods:{
             
         },
-         computed:{
-          
+        computed:{
+            login(){
+                return this.getUser.id_driver;
+            },
+            phone(){
+                return this.getUser.phone;
+            },
+            getUser(){
+                return this.$store.getters.getUserProfile;
+            }
         }
     }
 </script>
@@ -65,5 +98,9 @@
   flex-basis: 80%;
   display: flex;
   justify-content: center;
+}
+.menu_profil_button_text {
+  display: flex;
+  flex-direction: column;
 }
 </style>

@@ -1,14 +1,14 @@
 <template>
     <div class="component_container login_panel">
-        <div v-if="authState" class="wrapper_content">
-            <span>{{ user.name }}</span>
+        <div v-if="auth" class="wrapper_content">
+            <span>{{ userName }}</span>
             <form v-on:submit.prevent="logoutForm" action="">
                 <button>Выйти</button>
             </form>
-            <span v-if="user.admin">
+            <span v-if="userAdmin">
               <router-link to="/admin" exact>Админ панель</router-link>
             </span>
-			<span v-if="user.profil">
+			<span v-if="userProfil">
               <router-link to="/profil" exact>Профиль</router-link>
             </span>
         </div>
@@ -25,11 +25,6 @@
         data() {
             return {
                // auth:false,
-                user:{
-                    name:"",
-                    admin:false,
-					profil:false
-                },
                 isActive: false,
                 body:false,
             }
@@ -41,7 +36,7 @@
         },
         created(){
 
-          this.logedIn();
+           //this.getAuth();
 
         },
         methods:{
@@ -87,15 +82,13 @@
             logoutForm(){
                 let url = "/api/v1/logout";
 
-                     let token = window.localStorage.getItem('token');
+                    let token = this.authState.access_token;
 
-                    if (token) {
+                    //console.log(token);
 
-                        axios.defaults.headers = {
+                    axios.defaults.headers = {
                             'Content-Type': 'application/json',
                             Authorization: 'Bearer ' + token
-                        }
-
                     }
                      
                     axios.post(url)
@@ -103,28 +96,74 @@
                     //  console.log(response.data);
 
                       if (response.data.result == true) {
-                     //  console.log(response.data);
+                    // console.log(response.data);
 
-                       window.localStorage.setItem('token','');
-
-                       this.user.name = false;
-                       this.user.admin = false;
+                       //window.localStorage.setItem('token','');
 
                        this.$store.commit('UPDATE_AUTH_STATE',false);
+
+                       this.$store.dispatch('UPDATE_ACCESS_TOKEN',false);
+
+                       this.$store.dispatch('USER_AUTH');
+                      // window.location.reload();
                       }
 
 
+                    })
+                    .catch(error => {
+                        console.log(error.response);
+                        if(error.response.data.errors){
+                           console.log(error.response.data.errors);
+
+                           let err = error.response.data.errors;
+
+                           let $name = Object.keys(err);
+                           //console.log($name[0]); 
+                           let vals = Object.values(err);
+                          // console.log(vals[0][0]); 
+
+                           // console.log(this.errors.info);
+
+                            this.errors[$name[0]] = vals[0][0];
+                        }
                     });
             },
+            getAuth(){
+               // console.log(this.$store.getters.authState);
+
+            }
         },
-         computed:{
-          authState(){
-             // console.log(this.$store.getters.authState.state);
-             return this.$store.getters.authState.state;
-          },
-          auth(){
-             return this.$store.getters.auth;
-          }
+        computed:{
+        authState(){
+           // console.log(this.$store.getters.authState);
+            return this.$store.getters.authState;
+        },
+        auth(){
+           // console.log(this.authState);
+             return this.authState.state;
+        },
+        userName(){
+          //  console.log(this.authState.user.name);
+            if(this.authState.user.name){
+                return this.authState.user.name;
+            }else{
+                return false;
+            }
+        },
+        userAdmin(){
+            if(this.authState.user.is_admin){
+                return this.authState.user.is_admin;
+            }else{
+                return false;
+            }
+        },
+        userProfil(){
+            if(this.authState.user){
+                return true;
+            }else{
+                return false;
+            }
+        }
         }
     }
 </script>

@@ -66,7 +66,7 @@
 
             this.marker = new google.maps.Marker();
 
-            console.log(this.marker);
+           // console.log(this.marker);
 
             this.infoWindow = new google.maps.InfoWindow();
 
