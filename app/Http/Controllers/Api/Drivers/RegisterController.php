@@ -28,7 +28,7 @@ class RegisterController extends Controller
 
     public function register(RegisterFormRequest $request)
 	{
-		//dd('111');
+		dd('111');
 
 		//$driver_pwd = Str::upper(Str::random(16));
 

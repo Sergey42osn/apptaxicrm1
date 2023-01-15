@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class RegisterFormRequest extends FormRequest
 {
@@ -16,6 +18,14 @@ class RegisterFormRequest extends FormRequest
         //dd('123');
 
         return true;
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'result'    => false,
+            'errors' => $validator->errors()
+        ],200));
     }
 
     /**
@@ -39,7 +49,8 @@ class RegisterFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.unique' => 'Такой E-mail уже есть в базе'
+            'email.unique'  => 'Такой E-mail уже есть в базе',
+            'phone.digits'    => 'Телефон должен быть из 11 цифр'
         ];
     }
 }

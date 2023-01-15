@@ -388,7 +388,7 @@
                 {
                     this.isAjax = true;
 
-                    console.log(this.password);
+                   // console.log(this.password);
                     let url = "/api/v1/drivers/register";
                  
                     axios.post(url, {
@@ -400,7 +400,7 @@
                         password_confirmation: this.password_confirmation 
                     })
                     .then(response => {
-                       console.log(response.data);
+                      // console.log(response.data);
                         //localStorage.setItem('user',JSON.stringify(response.data.user))
                         //localStorage.setItem('jwt',response.data.token)
 
@@ -412,9 +412,20 @@
 
                         }
 
-                        if (response.data.errors) {
+                        if (response.data.result == false) {
 
-                            console.log(response.data.errors);
+                            //console.log(response.data.errors);
+
+                            let err = response.data.errors;
+
+                           let $name = Object.keys(err);
+                           //console.log($name[0]); 
+                           let vals = Object.values(err);
+                          // console.log(vals[0][0]); 
+
+                           // console.log(this.errors.info);
+
+                            this.errors[$name[0]] = vals[0][0];
 
                             this.errors.info = response.data.errors;
                             this.info = true;
